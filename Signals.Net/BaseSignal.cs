@@ -10,10 +10,16 @@ public abstract class BaseSignal<T> : ISignal
     protected T Value = default!;
     
     // How many times has the value of this signal changed
-    public int Version { get; set; }
-    public void RemoveChild(IComputeSignal child)
+    int ISignal.Version { get; set; }
+    
+    void ISignal.RemoveChild(IComputeSignal child)
     {
         Children.Remove(child);
+    }
+
+    protected void IncrementVersion()
+    {
+        (this as ISignal).Version++;
     }
 
     // We are suspect when a node somewhere above us in the graph has changed
@@ -30,12 +36,12 @@ public abstract class BaseSignal<T> : ISignal
         Effect = effect;
     }
     
-    public void AddChild(IComputeSignal signal)
+    void ISignal.AddChild(IComputeSignal signal)
     {
         Children.Add(signal);
     }
 
-    public void MarkAsSuspect()
+    void ISignal.MarkAsSuspect()
     {
         if (!IsSuspect)
         {

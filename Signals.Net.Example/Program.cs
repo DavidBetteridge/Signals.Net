@@ -6,7 +6,6 @@ var discountedPrice = new Signal<int>(20);
 
 var toPay = new Computed<int>(() => quantity.Get() < 10 ? basePrice.Get() : discountedPrice.Get());
 
-
 Console.WriteLine(toPay.Get());
 Console.ReadKey();
 

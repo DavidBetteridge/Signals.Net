@@ -11,7 +11,7 @@ public abstract class ComputedSignal<T> : BaseSignal<T>, IComputeSignal
     // Who do we depend on?
     protected readonly List<SignalWithVersion> Parents = [];
     
-    public void AddParent(ISignal signal)
+    void IComputeSignal.AddParent(ISignal signal)
     {
         Parents.Add(new SignalWithVersion(signal, -1));
     }
@@ -30,16 +30,16 @@ public abstract class ComputedSignal<T> : BaseSignal<T>, IComputeSignal
     public override T Get()
     {
         SignalDependencies.Instance.RecordDependency(this);
-        EnsureNodeIsComputed();
+        (this as IComputeSignal).EnsureNodeIsComputed();
         return Value;
     }
     
-    public void FireEffects()
+    void IComputeSignal.FireEffects()
     {
         if (Effect != null)
         {
             var oldValue = Value;
-            EnsureNodeIsComputed();
+            (this as IComputeSignal).EnsureNodeIsComputed();
             
             var changed = Comparer is null ? (Value is null || !Value.Equals(oldValue)) : !Comparer(Value, oldValue);
             if (changed)
@@ -59,7 +59,7 @@ public abstract class ComputedSignal<T> : BaseSignal<T>, IComputeSignal
         }
     }
     
-    public void EnsureNodeIsComputed()
+    void IComputeSignal.EnsureNodeIsComputed()
     {
         if (!IsSuspect) return;  // All good
         
@@ -92,7 +92,7 @@ public abstract class ComputedSignal<T> : BaseSignal<T>, IComputeSignal
             Compute();
             var changed = Comparer is null ? (Value is null || !Value.Equals(oldValue)) : !Comparer(Value, oldValue);
             if (changed)
-                Version++;
+                IncrementVersion();
         }
         
         IsSuspect = false;

@@ -15,13 +15,13 @@ public class Signal<T> : BaseSignal<T>
         if (changed)
         {
             // Top level signal has changed, so we need to mark all children as suspect
-            MarkAsSuspect();
+            (this as ISignal).MarkAsSuspect();
 
             // Update our value and bump the version
             var oldValue = Value;
             Value = value;
             IsSuspect = false;
-            Version++;
+            IncrementVersion();
             
             Effect?.Invoke(oldValue, value);
             
