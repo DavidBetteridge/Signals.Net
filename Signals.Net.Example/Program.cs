@@ -4,7 +4,7 @@ var quantity = new ReadWriteSignal<int>(1);
 var basePrice = new ReadWriteSignal<int>(60);
 var discountedPrice = new ReadWriteSignal<int>(20);
 
-var toPay = new Computed<int>(() => quantity.Get() < 10 ? 
+var toPay = new ComputedSignal<int>(() => quantity.Get() < 10 ? 
                                         quantity.Get() * basePrice.Get() : 
                                         quantity.Get() * discountedPrice.Get());
 
