@@ -4,8 +4,20 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Authors>David Betteridge</Authors>
+        <Description>Simple implementation of Signals</Description>
+        <RepositoryUrl>https://github.com/DavidBetteridge/Signals.Net</RepositoryUrl>
 <!--        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
 <!--        <AnalysisLevel>latest-Recommended</AnalysisLevel>-->
     </PropertyGroup>
 
+    <PropertyGroup>
+        <PackageReadmeFile>readme.md</PackageReadmeFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="readme.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+    
 </Project>
