@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Signals.Net", "Signals.Net\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Signals.Net.Example", "Signals.Net.Example\Signals.Net.Example.csproj", "{F9725179-6E1F-4B60-BCE3-75E38B429B28}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Signals.Net.Tests", "Signals.Net.Tests\Signals.Net.Tests.csproj", "{64F3BCE8-8EEC-4A2D-AA54-02618498F74B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{F9725179-6E1F-4B60-BCE3-75E38B429B28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9725179-6E1F-4B60-BCE3-75E38B429B28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9725179-6E1F-4B60-BCE3-75E38B429B28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64F3BCE8-8EEC-4A2D-AA54-02618498F74B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64F3BCE8-8EEC-4A2D-AA54-02618498F74B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64F3BCE8-8EEC-4A2D-AA54-02618498F74B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64F3BCE8-8EEC-4A2D-AA54-02618498F74B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
