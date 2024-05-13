@@ -120,8 +120,69 @@ public class ReadWriteSignals
         Assert.Null(current);
     }
     
-    // Add multiple effects
-    // Remove effect
+    [Fact]
+    public void ASignalCanHaveMultipleEffects()
+    {
+        var s = Signal.State(123);
+        
+        int? previous1 = null;
+        int? current1 = null;
+        int? previous2 = null;
+        int? current2 = null;
+        
+        s.AddEffect((p, c) =>
+        {
+            previous1 = p;
+            current1 = c;
+        });
+        
+        s.AddEffect((p, c) =>
+        {
+            previous2 = p;
+            current2 = c;
+        });
+        
+        s.Set(456);
+        
+        Assert.Equal(123, previous1);
+        Assert.Equal(456, current1);
+        
+        Assert.Equal(123, previous2);
+        Assert.Equal(456, current2);
+    }
+    
+    [Fact]
+    public void EffectsCanBeRemovedFromASignal()
+    {
+        var s = Signal.State(123);
+        
+        int? previous1 = null;
+        int? current1 = null;
+        int? previous2 = null;
+        int? current2 = null;
+        
+        var e1 = s.AddEffect((p, c) =>
+        {
+            previous1 = p;
+            current1 = c;
+        });
+        
+        var e2 = s.AddEffect((p, c) =>
+        {
+            previous2 = p;
+            current2 = c;
+        });
+
+        s.RemoveEffect(e2);
+        
+        s.Set(456);
+        
+        Assert.Equal(123, previous1);
+        Assert.Equal(456, current1);
+        
+        Assert.Null(previous2);
+        Assert.Null(current2);
+    }
 
     private record R
     {

@@ -42,7 +42,7 @@ public abstract class ComputedSignal<T> : BaseSignal<T>, IComputeSignal
     
     void IComputeSignal.FireEffects()
     {
-        if (Effect != null)
+        if (Effects.Count > 0)
         {
             var oldValue = Value;
             (this as IComputeSignal).EnsureNodeIsComputed();
@@ -50,7 +50,8 @@ public abstract class ComputedSignal<T> : BaseSignal<T>, IComputeSignal
             var changed = Comparer is null ? (Value is null || !Value.Equals(oldValue)) : !Comparer(Value, oldValue);
             if (changed)
             {
-                Effect(oldValue, Value);
+                foreach (var effect in Effects)
+                    effect.TheAction(oldValue, Value);
             }
             else
             {

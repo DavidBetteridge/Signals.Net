@@ -26,14 +26,21 @@ public abstract class BaseSignal<T> : ISignal
     protected bool IsSuspect = true;
   
     // Optional method to call when the value of this signal changes
-    protected Action<T,T>? Effect;
+    protected readonly List<Effect<T>> Effects = [];
     protected Func<T, T, bool>? Comparer;
 
     public abstract T Get();
 
-    public void AddEffect(Action<T, T> effect)
+    public Effect<T> AddEffect(Action<T, T> effect)
     {
-        Effect = effect;
+        var e = new Effect<T>(effect);
+        Effects.Add(e);
+        return e;
+    }
+
+    public bool RemoveEffect(Effect<T> effectToRemove)
+    {
+        return Effects.Remove(effectToRemove);
     }
     
     void ISignal.AddChild(IComputeSignal signal)

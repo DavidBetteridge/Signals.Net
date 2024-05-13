@@ -21,8 +21,11 @@ public class ReadWriteSignal<T> : BaseSignal<T>
             Value = value;
             IsSuspect = false;
             IncrementVersion();
-            
-            Effect?.Invoke(oldValue, value);
+
+            foreach (var effect in Effects)
+            {
+                effect.TheAction(oldValue, value);    
+            }
             
             foreach (var child in Children)
                 child.FireEffects();
