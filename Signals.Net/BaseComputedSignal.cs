@@ -15,7 +15,7 @@ public abstract class BaseComputedSignal<T> : BaseSignal<T>, IComputeSignal
     {
         if (!Parents.Exists(s => s.Signal == signal))
         {
-            Parents.Add(new SignalWithVersion(signal, -1));
+            Parents.Add(new SignalWithVersion(signal, signal.Version));
             return true;
         }
 

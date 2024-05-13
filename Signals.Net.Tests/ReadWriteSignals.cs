@@ -1,5 +1,6 @@
 namespace Signals.Net.Tests;
 
+[Collection("All")]
 public class ReadWriteSignals
 {
     [Fact]
