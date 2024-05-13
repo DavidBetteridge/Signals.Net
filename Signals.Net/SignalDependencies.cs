@@ -24,8 +24,8 @@ internal class SignalDependencies
     {
         if (Tracking.TryPeek(out var signalBeingCalculated))
         {
-            signalBeingCalculated.AddParent(gotSignal);
-            gotSignal.AddChild(signalBeingCalculated);
+            if (signalBeingCalculated.AddParent(gotSignal));
+                gotSignal.AddChild(signalBeingCalculated);
         }
     }
 }

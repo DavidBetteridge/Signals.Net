@@ -11,9 +11,15 @@ public abstract class ComputedSignal<T> : BaseSignal<T>, IComputeSignal
     // Who do we depend on?
     protected readonly List<SignalWithVersion> Parents = [];
     
-    void IComputeSignal.AddParent(ISignal signal)
+    bool IComputeSignal.AddParent(ISignal signal)
     {
-        Parents.Add(new SignalWithVersion(signal, -1));
+        if (!Parents.Exists(s => s.Signal == signal))
+        {
+            Parents.Add(new SignalWithVersion(signal, -1));
+            return true;
+        }
+
+        return false;
     }
 
     protected void RemoveAllDependencies()
