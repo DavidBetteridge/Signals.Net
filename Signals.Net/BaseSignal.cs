@@ -7,7 +7,7 @@ namespace Signals.Net;
 public abstract class BaseSignal<T> : ISignal
 {
     // Who depends on this signal
-    internal readonly List<IComputeSignal> Children = [];
+    internal List<IComputeSignal>? Children;
 
     // Value the last time this signal was calculated
     internal T Value = default!;
@@ -17,7 +17,7 @@ public abstract class BaseSignal<T> : ISignal
     
     void ISignal.RemoveChild(IComputeSignal child)
     {
-        Children.Remove(child);
+        Children?.Remove(child);
     }
 
     protected void IncrementVersion()
@@ -48,6 +48,7 @@ public abstract class BaseSignal<T> : ISignal
     
     void ISignal.AddChild(IComputeSignal signal)
     {
+        if (Children is null) Children = new List<IComputeSignal>();
         Children.Add(signal);
     }
 
@@ -56,8 +57,11 @@ public abstract class BaseSignal<T> : ISignal
         if (!IsSuspect)
         {
             IsSuspect = true;
-            foreach (var child in Children)
-                child.MarkAsSuspect();
+            if (Children is not null)
+            {
+                foreach (var child in Children)
+                    child.MarkAsSuspect();
+            }
         }
     }
 }

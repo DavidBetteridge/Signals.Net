@@ -79,9 +79,12 @@ public class ComputedSignal<T> : BaseSignal<T>, IComputeSignal
             }
         }
         // We have changed,  so maybe our children have as well
-        foreach (var child in Children.ToArray())
+        if (Children is not null)
         {
-            child.FireEffects();
+            foreach (var child in Children.ToArray())
+            {
+                child.FireEffects();
+            }
         }
     }
     

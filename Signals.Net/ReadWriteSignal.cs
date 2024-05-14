@@ -26,9 +26,12 @@ public class ReadWriteSignal<T> : BaseSignal<T>
             {
                 effect.TheAction(oldValue, value);    
             }
-            
-            foreach (var child in Children.ToArray())
-                child.FireEffects();
+
+            if (Children is not null)
+            {
+                foreach (var child in Children.ToArray())
+                    child.FireEffects();
+            }
         }
     }
    
