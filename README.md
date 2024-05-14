@@ -168,7 +168,5 @@ var adults = Signal.Computed(() => data.Get().Where(p => p.Age > 18).ToList(),
 
 
 ## Remaining work
-* Add test around adults example (previously errored)
 * Reduce allocations
-* Removing signals
 * Examples
