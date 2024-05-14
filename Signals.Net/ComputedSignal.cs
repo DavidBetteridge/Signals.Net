@@ -66,7 +66,7 @@ public class ComputedSignal<T> : BaseSignal<T>, IComputeSignal
             var oldValue = Value;
             (this as IComputeSignal).EnsureNodeIsComputed();
             
-            var changed = Comparer is null ? (Value is null || !Value.Equals(oldValue)) : !Comparer(Value, oldValue);
+            var changed = !Comparer(Value, oldValue);
             if (changed)
             {
                 foreach (var effect in Effects)
@@ -117,7 +117,7 @@ public class ComputedSignal<T> : BaseSignal<T>, IComputeSignal
             var oldValue = Value;
             
             Compute();
-            var changed = Comparer is null ? (Value is null || !Value.Equals(oldValue)) : !Comparer(Value, oldValue);
+            var changed = !Comparer(Value, oldValue);
             if (changed)
                 IncrementVersion();
         }

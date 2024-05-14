@@ -30,7 +30,9 @@ public abstract class BaseSignal<T> : ISignal
   
     // Optional method to call when the value of this signal changes
     internal readonly List<Effect<T>> Effects = [];
-    internal Func<T, T, bool>? Comparer;
+    
+    // Optional method to determine how the old and new values of T should be compared.
+    internal Func<T, T, bool> Comparer = EqualityComparer<T>.Default.Equals;
 
     public abstract T Get();
 

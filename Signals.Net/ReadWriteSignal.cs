@@ -9,7 +9,7 @@ public class ReadWriteSignal<T> : BaseSignal<T>
     }
     public void Set(T value)
     {
-        var changed = Comparer is null ? (Value is null || !Value.Equals(value)) : !Comparer(Value, value);
+        var changed = !Comparer(Value, value);
         
         if (changed)
         {
