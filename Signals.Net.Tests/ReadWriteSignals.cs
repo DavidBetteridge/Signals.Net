@@ -65,7 +65,7 @@ public class ReadWriteSignals
             Dt = new DateTime(2001, 1, 1)
         };
         
-        var s = Signal.State(r).UsingEquality((a,b) => a.S == b.S);
+        var s = Signal.State(r, (a,b) => a.S == b.S);
         
         R? previous = null;
         R? current = null;

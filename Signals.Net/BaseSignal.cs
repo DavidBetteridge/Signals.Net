@@ -1,13 +1,16 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Signals.Net;
 
 
+[SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
 public abstract class BaseSignal<T> : ISignal
 {
     // Who depends on this signal
-    protected readonly List<IComputeSignal> Children = [];
+    internal readonly List<IComputeSignal> Children = [];
 
     // Value the last time this signal was calculated
-    protected T Value = default!;
+    internal T Value = default!;
     
     // How many times has the value of this signal changed
     int ISignal.Version { get; set; }
@@ -23,11 +26,11 @@ public abstract class BaseSignal<T> : ISignal
     }
 
     // We are suspect when a node somewhere above us in the graph has changed
-    protected bool IsSuspect = true;
+    internal bool IsSuspect = true;
   
     // Optional method to call when the value of this signal changes
-    protected readonly List<Effect<T>> Effects = [];
-    protected Func<T, T, bool>? Comparer;
+    internal readonly List<Effect<T>> Effects = [];
+    internal Func<T, T, bool>? Comparer;
 
     public abstract T Get();
 

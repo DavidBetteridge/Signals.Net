@@ -19,8 +19,6 @@ public static class Signal
     
     public static ComputedSignal<T> Computed<T>(Func<T> expression, Func<T, T, bool> equalityComparer)
     {
-        var newSignal = new ComputedSignal<T>(expression);
-        newSignal.UsingEquality(equalityComparer);
-        return newSignal;
+        return new ComputedSignal<T>(expression).UsingEquality(equalityComparer);
     }
 }

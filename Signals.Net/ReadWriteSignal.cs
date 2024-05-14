@@ -35,11 +35,11 @@ public class ReadWriteSignal<T> : BaseSignal<T>
     public override T Get()
     {
         // Top level signal, so we know it's always correct
-        SignalDependencies.Instance.RecordDependency(this);
+        SignalDependencies.RecordDependency(this);
         return Value;
     }
     
-    public ReadWriteSignal<T> UsingEquality(Func<T, T, bool> comparer)
+    internal ReadWriteSignal<T> UsingEquality(Func<T, T, bool> comparer)
     {
         Comparer = comparer;
         return this;
