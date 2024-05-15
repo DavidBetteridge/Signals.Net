@@ -6,4 +6,5 @@ public interface IComputeSignal : ISignal
     
     void FireEffects();
     bool AddParent(ISignal gotSignal);
+    void Delete();
 }

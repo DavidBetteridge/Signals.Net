@@ -161,6 +161,7 @@ public class ComputedSignals
         {
             triggered = true;
         });
+        triggered = false;
         
         s1.Set(2);
         Assert.False(triggered);
@@ -178,9 +179,47 @@ public class ComputedSignals
         {
             triggered = true;
         });
+        triggered = false;
         
         s1.Set(2);
         Assert.True(triggered);
+    }
+
+    [Fact]
+    public void AComputedSignalCanBeDeleted()
+    {
+        var s1 = Signal.State(123);
+        var s2 = Signal.Computed(() => s1.Get() + 1 );
+        var triggered = false;
+        s2.AddEffect((p, c) =>
+        {
+            triggered = true;
+        });
+        triggered = false;
+
+        s2.Delete();
+        s1.Set(2);
+        Assert.False(triggered);
+    }
+    
+    [Fact]
+    public void ANestedComputedSignalCanBeDeleted()
+    {
+        var s1 = Signal.State(123);
+        var s2 = Signal.Computed(() => s1.Get() + 1 );
+        var s3 = Signal.Computed(() => s2.Get() + s1.Get() );
+        
+        
+        var triggered = false;
+        s3.AddEffect((p, c) =>
+        {
+            triggered = true;
+        });
+        triggered = false;
+
+        s2.Delete();
+        s1.Set(2);
+        Assert.False(triggered);
     }
     
     private record R(int A, int B);

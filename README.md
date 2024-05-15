@@ -139,7 +139,12 @@ numberOfAdults.AddEffect((oldCount, newCount) =>
 The **numberOfAdults** signal only needs to be computed if **adults** changes.
 
 In order to get this to work,  we have to supply your own Equality function. This is provided using a second (optional) 
-argument to the **Signal.State(** and **Signal.Computed(** methods.
+argument to the **Signal.State** and **Signal.Computed** methods.
+
+```csharp
+var adults = Signal.Computed(() => data.Get().Where(p => p.Age > 18).ToList(), 
+                            CompareOrderedLists);
+```
 
 ```csharp
 bool CompareOrderedLists<T>(IList<T> lhs, IList<T> rhs) where T : notnull
@@ -158,15 +163,3 @@ bool CompareOrderedLists<T>(IList<T> lhs, IList<T> rhs) where T : notnull
     return true;
 }
 ```
-
-This can then be provided to to the signal
-```csharp
-var adults = Signal.Computed(() => data.Get().Where(p => p.Age > 18).ToList(), 
-                            CompareOrderedLists);
-```
-
-
-
-## Remaining work
-* Examples
-* Delete signals

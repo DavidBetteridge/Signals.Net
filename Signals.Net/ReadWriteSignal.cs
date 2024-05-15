@@ -50,4 +50,13 @@ public class ReadWriteSignal<T> : BaseSignal<T>
         Comparer = comparer;
         return this;
     }
+
+    public void Delete()
+    {
+        if (Children is not null)
+        {
+            foreach (var child in Children.ToArray())
+                child.Delete();
+        }
+    }
 }

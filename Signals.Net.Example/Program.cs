@@ -1,27 +1,33 @@
 ﻿using Signals.Net;
 
-// var quantity = new ReadWriteSignal<int>(1);
-// var basePrice = new ReadWriteSignal<int>(60);
-// var discountedPrice = new ReadWriteSignal<int>(20);
-//
-// var toPay = new ComputedSignal<int>(() => quantity.Get() < 10 ? 
-//                                         quantity.Get() * basePrice.Get() : 
-//                                         quantity.Get() * discountedPrice.Get());
-//
-// Console.WriteLine(toPay.Get());
-// Console.ReadKey();
-//
-// discountedPrice.Set(10);
-// Console.ReadKey();
-//
-// Console.WriteLine(toPay.Get());
-// Console.ReadKey();
-//
-// quantity.Set(11);
-// Console.ReadKey();
-//
-// Console.WriteLine(toPay.Get());
-// Console.ReadKey();
+// Example 1 - Counter -> IsEven -> Parity
+var counter = Signal.State(2);
+var isEven = Signal.Computed(() => counter.Get() % 2 == 0 );
+var parity = Signal.Computed(() => isEven.Get() ? "Even" : "Odd" );
+
+
+// Example 2 - The dependencies of toPay mutate depending on the value of Quantity
+var quantity = new ReadWriteSignal<int>(1);
+var basePrice = new ReadWriteSignal<int>(60);
+var discountedPrice = new ReadWriteSignal<int>(20);
+
+var toPay = new ComputedSignal<int>(() => quantity.Get() < 10 ? 
+                                        quantity.Get() * basePrice.Get() : 
+                                        quantity.Get() * discountedPrice.Get());
+
+
+
+// Example 3 - Data with custom equality
+var data = Signal.State<List<People>>(
+    [new People("David", 48), new People("Rebecca", 47), new People("Esther", 15)]  ); 
+var adults = Signal.Computed(() => data.Get().Where(p => p.Age > 18).ToList(), CompareOrderedLists);
+var numberOfAdults = Signal.Computed(() => adults.Get().Count );
+numberOfAdults.AddEffect((oldCount, newCount) => 
+    Console.WriteLine($"Number of adults changed from {oldCount} to {newCount}"));
+
+
+
+return;
 
 bool CompareOrderedLists<T>(IList<T> lhs, IList<T> rhs) where T : notnull
 {
@@ -38,25 +44,5 @@ bool CompareOrderedLists<T>(IList<T> lhs, IList<T> rhs) where T : notnull
 
     return true;
 }
-
-
-var data = Signal.State<List<People>>([new People("David", 48)]); 
-
-var adults = Signal.Computed(() => data.Get().Where(p => p.Age > 18).ToList(), CompareOrderedLists);
-
-var numberOfAdults = Signal.Computed(() =>
-{
-    Console.WriteLine("Counting adults");
-    return adults.Get().Count;
-});
-
-numberOfAdults.AddEffect((oldCount, newCount) => 
-    Console.WriteLine($"Number of adults changed from {oldCount} to {newCount}"));
-
-data.Set([new People("David", 48), new People("Mary", 12)]);
-
-Console.ReadKey();
-
-data.Set([new People("David", 48), new People("Mary", 12), new People("Rebecca", 48)]);
 
 record People(string Name, int Age);

@@ -124,4 +124,14 @@ public class ComputedSignal<T> : BaseSignal<T>, IComputeSignal
         Comparer = comparer;
         return this;
     }
+
+    public void Delete()
+    {
+        RemoveAllDependencies();
+        if (Children is not null)
+        {
+            foreach (var child in Children.ToArray())
+                child.Delete();
+        }
+    }
 }

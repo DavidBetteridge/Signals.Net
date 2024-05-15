@@ -184,6 +184,24 @@ public class ReadWriteSignals
         Assert.Null(previous2);
         Assert.Null(current2);
     }
+    
+    [Fact]
+    public void AReadWriteSignalCanBeDeleted()
+    {
+        var s1 = Signal.State(1);
+        var s2 = Signal.State(2);
+        var s3 = Signal.Computed(() => s1.Get() + s2.Get() );
+        var triggered = false;
+        s3.AddEffect((p, c) =>
+        {
+            triggered = true;
+        });
+        triggered = false;
+
+        s1.Delete();
+        s2.Set(3);
+        Assert.False(triggered);
+    }
 
     private record R
     {
