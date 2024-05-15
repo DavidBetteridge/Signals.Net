@@ -8,7 +8,7 @@
         <Authors>David Betteridge</Authors>
         <Description>Simple implementation of Signals</Description>
         <RepositoryUrl>https://github.com/DavidBetteridge/Signals.Net</RepositoryUrl>
-        <Version>1.2.0</Version>
+        <Version>2.0.0</Version>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <AnalysisLevel>latest-Recommended</AnalysisLevel>
     </PropertyGroup>
