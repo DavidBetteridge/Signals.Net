@@ -10,20 +10,14 @@ public class ComputedSignal<T> : BaseSignal<T>, IComputeSignal
         Calculate();
     }
     
-    private sealed class SignalWithVersion(ISignal signal, int version)
-    {
-        public int Version { get; set; } = version;
-        public ISignal Signal { get; } = signal;
-    }
-
     // Who do we depend on?
-    private readonly List<SignalWithVersion> _parents = [];
+    private readonly Dictionary<ISignal, uint> _parents = [];
     
     bool IComputeSignal.AddParent(ISignal signal)
     {
-        if (!_parents.Exists(s => s.Signal == signal))
+        if (!_parents.ContainsKey(signal))
         {
-            _parents.Add(new SignalWithVersion(signal, signal.Version));
+            _parents[signal] = signal.Version;
             return true;
         }
 
@@ -34,7 +28,7 @@ public class ComputedSignal<T> : BaseSignal<T>, IComputeSignal
     {
         foreach (var parent in _parents)
         {
-            parent.Signal.RemoveChild(this);
+            parent.Key.RemoveChild(this);
         }
         _parents.Clear();
     }
@@ -48,23 +42,23 @@ public class ComputedSignal<T> : BaseSignal<T>, IComputeSignal
 
     private void Compute()
     {
-        RemoveAllDependencies();
-        Calculate();
+        RemoveAllDependencies();        // Perf: In a lot of cases we will end up re-adding the same
+        Calculate();                    // dependencies.  It might be better to add a dead/alive flag.
     }
     
     public override T Get()
     {
         SignalDependencies.RecordDependency(this);
-        (this as IComputeSignal).EnsureNodeIsComputed();
+        (this as IComputeSignal).EnsureNodeIsComputed();        // Perf: Cast
         return Value;
     }
     
     void IComputeSignal.FireEffects()
     {
-        if (Effects.Count > 0)
+        if (Effects is not null && Effects.Count > 0)
         {
             var oldValue = Value;
-            (this as IComputeSignal).EnsureNodeIsComputed();
+            (this as IComputeSignal).EnsureNodeIsComputed();        // Perf: Cast
             
             var changed = !Comparer(Value, oldValue);
             if (changed)
@@ -81,7 +75,7 @@ public class ComputedSignal<T> : BaseSignal<T>, IComputeSignal
         // We have changed,  so maybe our children have as well
         if (Children is not null)
         {
-            foreach (var child in Children.ToArray())
+            foreach (var child in Children.ToArray())           // Perf: Allocation
             {
                 child.FireEffects();
             }
@@ -95,7 +89,7 @@ public class ComputedSignal<T> : BaseSignal<T>, IComputeSignal
         // Make sure our parents are good
         foreach (var parent in _parents)
         {
-            if (parent.Signal is IComputeSignal computeSignal)
+            if (parent.Key is IComputeSignal computeSignal)
             {
                 computeSignal.EnsureNodeIsComputed();
             }
@@ -105,10 +99,10 @@ public class ComputedSignal<T> : BaseSignal<T>, IComputeSignal
         var updateNeeded = false;
         foreach (var parent in _parents)
         {
-            if (parent.Version != parent.Signal.Version)
+            if (parent.Value != parent.Key.Version)
             {
                 updateNeeded = true;
-                parent.Version = parent.Signal.Version;
+                _parents[parent.Key] = parent.Key.Version;
             }
         }
 

@@ -14,7 +14,7 @@ public class ReadWriteSignal<T> : BaseSignal<T>
         if (changed)
         {
             // Top level signal has changed, so we need to mark all children as suspect
-            (this as ISignal).MarkAsSuspect();
+            (this as ISignal).MarkAsSuspect();      // Perf: Cast
 
             // Update our value and bump the version
             var oldValue = Value;
@@ -22,14 +22,17 @@ public class ReadWriteSignal<T> : BaseSignal<T>
             IsSuspect = false;
             IncrementVersion();
 
-            foreach (var effect in Effects)
+            if (Effects is not null)
             {
-                effect.TheAction(oldValue, value);    
+                foreach (var effect in Effects)
+                {
+                    effect.TheAction(oldValue, value);
+                }
             }
 
             if (Children is not null)
             {
-                foreach (var child in Children.ToArray())
+                foreach (var child in Children.ToArray())  // Perf: Allocation
                     child.FireEffects();
             }
         }

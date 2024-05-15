@@ -13,7 +13,7 @@ public abstract class BaseSignal<T> : ISignal
     internal T Value = default!;
     
     // How many times has the value of this signal changed
-    int ISignal.Version { get; set; }
+    uint ISignal.Version { get; set; }
     
     void ISignal.RemoveChild(IComputeSignal child)
     {
@@ -22,14 +22,14 @@ public abstract class BaseSignal<T> : ISignal
 
     protected void IncrementVersion()
     {
-        (this as ISignal).Version++;
+        (this as ISignal).Version++;        // Perf: Cast
     }
 
     // We are suspect when a node somewhere above us in the graph has changed
     internal bool IsSuspect = true;
   
-    // Optional method to call when the value of this signal changes
-    internal readonly List<Effect<T>> Effects = [];
+    // Optional methods to call when the value of this signal changes
+    internal List<Effect<T>>? Effects;
     
     // Optional method to determine how the old and new values of T should be compared.
     internal Func<T, T, bool> Comparer = EqualityComparer<T>.Default.Equals;
@@ -38,6 +38,7 @@ public abstract class BaseSignal<T> : ISignal
 
     public Effect<T> AddEffect(Action<T, T> effect)
     {
+        if (Effects is null) Effects = new List<Effect<T>>();
         var e = new Effect<T>(effect);
         Effects.Add(e);
         return e;
@@ -45,7 +46,7 @@ public abstract class BaseSignal<T> : ISignal
 
     public bool RemoveEffect(Effect<T> effectToRemove)
     {
-        return Effects.Remove(effectToRemove);
+        return Effects?.Remove(effectToRemove) ?? false;
     }
     
     void ISignal.AddChild(IComputeSignal signal)

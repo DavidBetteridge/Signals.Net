@@ -4,7 +4,7 @@ public interface ISignal
 {
     public void MarkAsSuspect();
     
-    public int Version { get; set; }
+    public uint Version { get; set; }
     
     void RemoveChild(IComputeSignal child);
     void AddChild(IComputeSignal signal);
